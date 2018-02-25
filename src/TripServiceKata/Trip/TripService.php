@@ -10,30 +10,25 @@ class TripService
 {
     public function getTripsByUser(User $user)
     {
-        $tripList = array();
         $loggedUser = $this->getLoggedInUser();
 
         if (null === $loggedUser) {
             throw new UserNotLoggedInException();
         }
 
-        if ($user->isFriendsWith($loggedUser)) {
-            $tripList = $this->tripsByUser($user);
-        }
-
-        return $tripList;
+        return $user->isFriendsWith($loggedUser)
+            ? $tripList = $this->tripsByUser($user)
+            : array();
     }
 
-    protected function getLoggedInUser()
+    protected function getLoggedInUser(): ?User
     {
         return UserSession::getInstance()->getLoggedUser();
     }
 
-    /**
-     * @param User $user
-     */
-    protected function tripsByUser(User $user)
+    protected function tripsByUser(User $user): array
     {
         return TripDAO::findTripsByUser($user);
     }
 }
+
