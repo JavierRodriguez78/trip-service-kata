@@ -13,15 +13,15 @@ class TripService
         $tripList = array();
         $loggedUser = $this->getLoggedInUser();
 
-        if ($loggedUser != null) {
-            if ($user->isFriendsWith($loggedUser)) {
-                $tripList = $this->tripsByUser($user);
-            }
-
-            return $tripList;
-        } else {
+        if (null === $loggedUser) {
             throw new UserNotLoggedInException();
         }
+
+        if ($user->isFriendsWith($loggedUser)) {
+            $tripList = $this->tripsByUser($user);
+        }
+
+        return $tripList;
     }
 
     protected function getLoggedInUser()
