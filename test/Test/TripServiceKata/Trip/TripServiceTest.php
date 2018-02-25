@@ -10,8 +10,6 @@ use TripServiceKata\User\User;
 
 class TripServiceTest extends TestCase
 {
-    private $tripService;
-
     /**
      * @test
      * @expectedException \TripServiceKata\Exception\UserNotLoggedInException
@@ -19,8 +17,9 @@ class TripServiceTest extends TestCase
     public function itShouldThrownAnExceptionWhenUserIsNotLoggedIn()
     {
         $tripService = new TestableTripService(null);
+        $loggedInUser = null;
         $user = new User('Bob');
-        $tripService->getTripsByUser($user);
+        $tripService->getTripsByUser($user, null);
     }
 
     /**
@@ -36,7 +35,7 @@ class TripServiceTest extends TestCase
 
         $otherUser = new User('Marshall');
         $tripService = new TestableTripService($loggedInUser);
-        $trips = $tripService->getTripsByUser($otherUser);
+        $trips = $tripService->getTripsByUser($otherUser, $loggedInUser);
 
         $this->assertTrue(is_array($trips));
         $this->assertEmpty($trips);
@@ -57,7 +56,7 @@ class TripServiceTest extends TestCase
         $friend->addTrip($scotlandTrip);
 
         $tripService = new TestableTripService($loggedInUser);
-        $trips = $tripService->getTripsByUser($friend);
+        $trips = $tripService->getTripsByUser($friend, $loggedInUser);
 
         $this->assertEquals(2, count($trips));
     }
@@ -72,12 +71,7 @@ class TestableTripService extends TripService
         $this->loggedInUser = $loggedInUser;
     }
 
-    protected function getLoggedInUser()
-    {
-        return $this->loggedInUser;
-    }
-
-    protected function tripsByUser(User $user)
+    protected function tripsByUser(User $user): array
     {
         return $user->getTrips();
     }
