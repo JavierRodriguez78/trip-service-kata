@@ -52,9 +52,9 @@ class TripServiceTest extends TestCase
         $friend->addFriend($loggedInUser);
 
         $japanTrip = new Trip();
-        $loggedInUser->addTrip($japanTrip);
+        $friend->addTrip($japanTrip);
         $scotlandTrip = new Trip();
-        $loggedInUser->addTrip($scotlandTrip);
+        $friend->addTrip($scotlandTrip);
 
         $tripService = new TestableTripService($loggedInUser);
         $trips = $tripService->getTripsByUser($friend);
@@ -75,6 +75,11 @@ class TestableTripService extends TripService
     protected function getLoggedInUser()
     {
         return $this->loggedInUser;
+    }
+
+    protected function tripsByUser(User $user)
+    {
+        return $user->getTrips();
     }
 }
 
