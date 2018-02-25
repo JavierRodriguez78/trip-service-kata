@@ -16,9 +16,7 @@ class TripService
 
     public function getTripsByUser(User $user, User $loggedUser = null)
     {
-        if (null === $loggedUser) {
-            throw new UserNotLoggedInException();
-        }
+        $this->checkUserIsLoggedIn($loggedUser);
 
         return $user->isFriendsWith($loggedUser)
             ? $tripList = $this->tripsByUser($user)
@@ -28,6 +26,13 @@ class TripService
     protected function tripsByUser(User $user): array
     {
         return $this->tripDAO->tripsByUser($user);
+    }
+
+    private function checkUserIsLoggedIn(User $loggedUser = null): void
+    {
+        if (null === $loggedUser) {
+            throw new UserNotLoggedInException();
+        }
     }
 }
 
