@@ -5,6 +5,7 @@ namespace Test\TripServiceKata\Trip;
 use function is_array;
 use PHPUnit\Framework\TestCase;
 use TripServiceKata\Trip\Trip;
+use TripServiceKata\Trip\TripDAO;
 use TripServiceKata\Trip\TripService;
 use TripServiceKata\User\User;
 
@@ -16,7 +17,10 @@ class TripServiceTest extends TestCase
      */
     public function itShouldThrownAnExceptionWhenUserIsNotLoggedIn()
     {
-        $tripService = new TestableTripService(null);
+        $tripDao = $this->getMockBuilder(TripDAO::class)
+            ->getMock();
+
+        $tripService = new TripService($tripDao);
         $loggedInUser = null;
         $user = new User('Bob');
         $tripService->getTripsByUser($user, null);
@@ -32,9 +36,17 @@ class TripServiceTest extends TestCase
         $loggedInUser->addFriend($friend);
         $japanTrip = new Trip();
         $loggedInUser->addTrip($japanTrip);
-
         $otherUser = new User('Marshall');
-        $tripService = new TestableTripService($loggedInUser);
+
+        $tripDao = $this->getMockBuilder(TripDAO::class)
+            ->setMethods(['tripsByUser'])
+            ->getMock();
+        $tripDao
+            ->expects($this->any())
+            ->method('tripsByUser')
+            ->willReturn([]);
+
+        $tripService = new TripService($tripDao);
         $trips = $tripService->getTripsByUser($otherUser, $loggedInUser);
 
         $this->assertTrue(is_array($trips));
@@ -55,25 +67,18 @@ class TripServiceTest extends TestCase
         $scotlandTrip = new Trip();
         $friend->addTrip($scotlandTrip);
 
-        $tripService = new TestableTripService($loggedInUser);
+        $tripDao = $this->getMockBuilder(TripDAO::class)
+            ->setMethods(['tripsByUser'])
+            ->getMock();
+
+        $tripDao
+            ->expects($this->any())
+            ->method('tripsByUser')
+            ->willReturn([$scotlandTrip, $japanTrip]);
+
+        $tripService = new TripService($tripDao);
         $trips = $tripService->getTripsByUser($friend, $loggedInUser);
 
         $this->assertEquals(2, count($trips));
     }
 }
-
-class TestableTripService extends TripService
-{
-    private $loggedInUser;
-
-    public function __construct(User $loggedInUser = null)
-    {
-        $this->loggedInUser = $loggedInUser;
-    }
-
-    protected function tripsByUser(User $user): array
-    {
-        return $user->getTrips();
-    }
-}
-
