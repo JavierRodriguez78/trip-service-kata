@@ -18,4 +18,17 @@ class UserTest extends TestCase
 
         $this->assertFalse($user->isFriendsWith($noFriend));
     }
+
+    /**
+     * @test
+     */
+    public function itShouldInformWhenUsersAreFriends()
+    {
+        $user = new User('Bob');
+        $friend = new User('John');
+
+        $user->addFriend($friend);
+
+        $this->assertTrue($user->isFriendsWith($friend));
+    }
 }
