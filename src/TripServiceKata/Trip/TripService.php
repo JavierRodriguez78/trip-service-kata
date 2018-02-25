@@ -12,17 +12,9 @@ class TripService
     {
         $tripList = array();
         $loggedUser = $this->getLoggedInUser();
-        $isFriend = false;
 
         if ($loggedUser != null) {
-            foreach ($user->getFriends() as $friend) {
-                if ($friend == $loggedUser) {
-                    $isFriend = true;
-                    break;
-                }
-            }
-
-            if ($isFriend) {
+            if ($user->isFriendsWith($loggedUser)) {
                 $tripList = $this->tripsByUser($user);
             }
 
