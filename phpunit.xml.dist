@@ -18,10 +18,12 @@
         </testsuite>
     </testsuites>
 
-    <!--
-    <php>
-        <ini name="date.timezone" value="Europe/Madrid" />
-    </php>
-    -->
-
+    <filter>
+        <whitelist>
+            <directory>./src/</directory>
+            <exclude>
+                <directory>./test/</directory>
+            </exclude>                                                                       
+        </whitelist>  
+    </filter>
 </phpunit>
