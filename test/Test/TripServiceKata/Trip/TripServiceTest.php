@@ -12,7 +12,7 @@ class TripServiceTest extends TestCase
 
     protected function setUp()
     {
-        $this->tripService = new TripService();
+        $this->tripService = new TestableTripService();
     }
 
     /**
@@ -25,3 +25,12 @@ class TripServiceTest extends TestCase
         $this->tripService->getTripsByUser($user);
     }
 }
+
+class TestableTripService extends TripService
+{
+    protected function getLoggedInUser()
+    {
+        return null;
+    }
+}
+
