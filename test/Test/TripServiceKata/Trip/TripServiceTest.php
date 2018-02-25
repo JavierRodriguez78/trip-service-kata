@@ -41,6 +41,26 @@ class TripServiceTest extends TestCase
         $this->assertTrue(is_array($trips));
         $this->assertEmpty($trips);
     }
+
+    /**
+     * @test
+     */
+    public function itShouldReturnFriendTripsWhenUsersAreFriend()
+    {
+        $loggedInUser = new User('Joe');
+        $friend = new User('Jack');
+        $friend->addFriend($loggedInUser);
+
+        $japanTrip = new Trip();
+        $loggedInUser->addTrip($japanTrip);
+        $scotlandTrip = new Trip();
+        $loggedInUser->addTrip($scotlandTrip);
+
+        $tripService = new TestableTripService($loggedInUser);
+        $trips = $tripService->getTripsByUser($friend);
+
+        $this->assertEquals(2, count($trips));
+    }
 }
 
 class TestableTripService extends TripService
