@@ -1,14 +1,10 @@
-# PHP
+# Trip Service Kata
+Kata for legacy code hands-on session. The objective is to test and refactor the legacy TripService class.
 
-In order to perform the kata, first of all you will need to install all of the dependencies. This can be done using
-composer (standing from the *"php"* directory")
+The end result should be well-crafted code that express the domain.
 
-```shell
-wget http://getcomposer.org/composer.phar
-php composer.phar install
-```
-
-Next, to execute the unit tests you need run this from the *php* directory
+## Running tests
+To execute the unit tests you need run this from the *php* directory
 
     php bin/phpunit
 
@@ -21,11 +17,11 @@ just run
 
 If you want to visualize it from the browser you have to run PHPUnit with this parameters
 
-    php bin/phpunit --coverage-html report/
+    php bin/phpunit --coverage-html coverage/
 
 Then visualize
 
-    open report/index.html
+    open coverage/index.html
 
 in a browser
 
